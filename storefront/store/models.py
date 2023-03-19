@@ -18,6 +18,7 @@ class Product(models.Model):
     last_update = models.DateTimeField(auto_now=True)
     collection =  models.ForeignKey(Collection, on_delete=models.PROTECT)
     promotions = models.ManyToManyField(Promotion)
+    slug = models.TextField(default='-')
     
 class Customer(models.Model):
     MEMBERSHIP_BRONZE  = 'B'
@@ -29,7 +30,7 @@ class Customer(models.Model):
         (MEMBERSHIP_SILVER, 'Silver'),
         (MEMBERSHIP_GOLD, 'Gold')
     ]
-    given_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     phone = models.CharField(max_length=255)
