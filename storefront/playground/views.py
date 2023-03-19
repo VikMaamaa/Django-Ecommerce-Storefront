@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.db.models import Q, F
 from django.http import HttpResponse
+from django.db.models import Value
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models.aggregates import Count, Max, Min, Avg,  Sum
 
-from store.models import Product, OrderItem
+from store.models import Product, OrderItem, Order, Customer
 # Create your views here.
 
 def calculate():
@@ -20,7 +22,14 @@ def say_hello(request):
     #     pro.append(t)
     # exists = Product.objects.values('id', 'title', 'collection__title')
     
-    exists = Product.objects.filter(id__in=OrderItem.objects.values('product_id').distinct()).order_by('title')
+    # exists = Product.objects.prefetch_related('promotions').select_related('collection').all()
+    
+    
     
     # print(exists)
-    return render(request, 'hello.html', {'name': 'Mosh', 'products':list(exists)})
+    # exists = Order.objects.select_related('customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]
+    # exists = Product.objects.filter(collection__id=1).aggregate(Count('id'), min_price=Min('unit_price'))
+    
+    
+    exists = Customer.objects.annotate(new_id=F('id') +1)
+    return render(request, 'hello.html', {'name': 'Mosh', 'results': exists})
