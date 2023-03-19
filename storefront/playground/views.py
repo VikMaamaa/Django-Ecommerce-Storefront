@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.db import transaction
 from django.db.models import Value, ExpressionWrapper
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import connection
 from django.db.models.aggregates import Count, Max, Min, Avg,  Sum
 
 from store.models import Product, OrderItem, Order, Customer, Collection
@@ -15,7 +16,7 @@ def calculate():
     y = 2
     return x
 
-@transaction.atomic
+# @transaction.atomic
 def say_hello(request):
     # order = OrderItem.objects.all()
     # pro = []
@@ -64,16 +65,21 @@ def say_hello(request):
     # Collection.objects.filter(id__gt=5).delete()
    
     # print(collection)
-    with transaction.atomic():
-        order = Order()
-        order.customer_id = 1
-        order.save()
+    # with transaction.atomic():
+    #     order = Order()
+    #     order.customer_id = 1
+    #     order.save()
         
         
-        item = OrderItem()
-        item.order = order
-        item.product_id = 1
-        item.quantity = 1
-        item.unit_price = 10
-        item.save()
+    #     item = OrderItem()
+    #     item.order = order
+    #     item.product_id = 1
+    #     item.quantity = 1
+    #     item.unit_price = 10
+    #     item.save()
+    with connection.cursor as cursor:
+        cursor.callproc('get_customers', [1,2,'a'])
+    
+    queryset = Product.objects.raw('SELECT id, title * FROM store_product')
+    
     # return render(request, 'hello.html', {'name': 'Mosh', 'results': exists})
