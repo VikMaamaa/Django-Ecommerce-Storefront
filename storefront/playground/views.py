@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.db.models import Q, F
+from django.db.models import Q, F, Func
+from django.db.models.functions import Concat
 from django.http import HttpResponse
 from django.db.models import Value
 from django.core.exceptions import ObjectDoesNotExist
@@ -31,5 +32,12 @@ def say_hello(request):
     # exists = Product.objects.filter(collection__id=1).aggregate(Count('id'), min_price=Min('unit_price'))
     
     
-    exists = Customer.objects.annotate(new_id=F('id') +1)
-    return render(request, 'hello.html', {'name': 'Mosh', 'results': exists})
+    exists = Customer.objects.annotate(
+        full_name = Func(F('first_name'),Value(' ') ,F('last_name'), function='CONCAT')
+    )
+    
+    exists = Customer.objects.annotate(
+        full_name = Concat('first_name',Value(' ') ,'last_name')
+    )
+    print(exists)
+    # return render(request, 'hello.html', {'name': 'Mosh', 'results': exists})
