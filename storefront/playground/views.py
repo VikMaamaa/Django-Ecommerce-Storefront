@@ -6,7 +6,7 @@ from django.db.models import Value, ExpressionWrapper
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models.aggregates import Count, Max, Min, Avg,  Sum
 
-from store.models import Product, OrderItem, Order, Customer
+from store.models import Product, OrderItem, Order, Customer, Collection
 # Create your views here.
 
 def calculate():
@@ -40,10 +40,21 @@ def say_hello(request):
     #     full_name = Concat('first_name',Value(' ') ,'last_name')
     # )
     
-    discounted_price = ExpressionWrapper(F('unit_price') * 0.8, output_field=DecimalField())
-    exists = Product.objects.annotate(
+    # discounted_price = ExpressionWrapper(F('unit_price') * 0.8, output_field=DecimalField())
+    # exists = Product.objects.annotate(
         
-        discounted_price = discounted_price
-    )
-    print(exists)
+    #     discounted_price = discounted_price
+    # )
+    # print(exists)
+    
+    # collection = Collection.objects.get(pk=11)
+    # collection.title = 'Games'
+    # collection.featured_product = None
+    # collection.save()
+    # collection.id
+    
+    collection = Collection.objects.filter(pk=11).update(featured_product=None)
+    
+   
+    print(collection)
     # return render(request, 'hello.html', {'name': 'Mosh', 'results': exists})
