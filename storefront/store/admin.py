@@ -2,7 +2,7 @@ from django.contrib import admin, messages
 from django.db.models import Count
 from django.urls import reverse
 from django.utils.html import format_html, urlencode
-from .models import Collection, Product, Customer, Order
+from .models import Collection, Product, Customer, Order, OrderItem
 # Register your models here.
 
 
@@ -74,8 +74,17 @@ class CustomerAdmin(admin.ModelAdmin):
             orders_count=Count('order')
         )
   
+class OrderItemInline(admin.StackedInline) :
+    autocomplete_fields = ['product']
+    min_num = 1
+    max_num = 10
+    model = OrderItem 
+    extra = 0
+  
 @admin.register(Order)    
 class OrderAdmin(admin.ModelAdmin):    
+    autocomplete_fields = ['customer'],
+    inlines = [OrderItemInline]
     list_display = ['id', 'placed_at', 'customer']
     
 # admin.site.register(Collection)
