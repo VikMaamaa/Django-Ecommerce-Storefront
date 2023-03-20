@@ -5,6 +5,6 @@ from tags.models import TaggedItem
 
 # Create your views here.
 def say_hello(request):
-    TaggedItem.objects.get_tags_for(Product, 1)
+    queryset =TaggedItem.objects.get_tags_for(Product, 1)
     
-    return render(request, 'hello.html', {'name': 'Mosh', 'tags': list(queryset)})
+    return render(request, 'hello.html', {'name': 'Mosh'})
